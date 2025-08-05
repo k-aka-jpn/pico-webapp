@@ -1,10 +1,24 @@
-from flask import Flask, render_template
+from flask import Flask, request, jsonify
+import json
 
 app = Flask(__name__)
+config_file = 'config.json'
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route('/set_config', methods=['POST'])
+def set_config():
+    data = request.json
+    with open(config_file, 'w') as f:
+        json.dump(data, f)
+    return jsonify({"status": "ok", "received": data})
+
+@app.route('/get_config', methods=['GET'])
+def get_config():
+    try:
+        with open(config_file, 'r') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = {}
+    return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
