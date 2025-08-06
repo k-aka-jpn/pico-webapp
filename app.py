@@ -3,24 +3,13 @@ import json
 import os
 
 app = Flask(__name__)
-config_file = 'config.json'
 
-@app.route('/set_config', methods=['POST'])
-def set_config():
-    data = request.json
-    with open(config_file, 'w') as f:
-        json.dump(data, f)
-    return jsonify({"status": "ok", "received": data})
+@app.route('/')
+def home():
+    return 'サーバ接続成功！'
 
-@app.route('/get_config', methods=['GET'])
-def get_config():
-    try:
-        with open(config_file, 'r') as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        data = {}
-    return jsonify(data)
-
+# Render対応
 if __name__ == '__main__':
+    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)

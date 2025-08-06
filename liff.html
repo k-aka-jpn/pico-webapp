@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LIFF Test</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <h1>LIFFテスト</h1>
+  <button onclick="sendRequest()">サーバに接続</button>
+  <p id="result"></p>
+
+  <script>
+    async function sendRequest() {
+      try {
+        const response = await fetch("https://your-app-name.onrender.com/");
+        const text = await response.text();
+        document.getElementById("result").textContent = text;
+      } catch (err) {
+        document.getElementById("result").textContent = "通信エラー: " + err;
+      }
+    }
+
+    // LIFF 初期化（今回は最低限）
+    liff.init({ liffId: "YOUR_LIFF_ID" }).then(() => {
+      console.log("LIFF init成功");
+    }).catch((err) => {
+      console.error("LIFF init失敗", err);
+    });
+  </script>
+</body>
+</html>
