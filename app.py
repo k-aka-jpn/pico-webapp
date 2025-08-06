@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask import send_file
 import json
 
 app = Flask(__name__)
@@ -7,7 +8,7 @@ THRESHOLD_FILE = "threshold.json"
 
 @app.route('/')
 def index():
-    return 'LIFFアプリのサーバが動作しています'
+    return send_file('liff.html')
 
 @app.route('/set_threshold', methods=['POST'])
 def set_threshold():
