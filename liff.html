@@ -1,6 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>しきい値設定</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <h2>しきい値の設定</h2>
+  <input type="number" id="x_threshold" step="0.1" placeholder="x_threshold" />
+  <button onclick="sendThreshold()">送信</button>
+
+  <script>
+    async function sendThreshold() {
+      const x_threshold = parseFloat(document.getElementById("x_threshold").value);
+      const data = { x_threshold };
+
+      await fetch("https://your-app-name.onrender.com/set_threshold", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      alert("送信完了");
+    }
+
+    liff.init({ liffId: "2007874613-rJgOWJ89" }).then(() => {
+      console.log("LIFF init");
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
   <title>LIFF Test</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
