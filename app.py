@@ -5,6 +5,10 @@ app = Flask(__name__)
 
 THRESHOLD_FILE = "threshold.json"
 
+@app.route('/')
+def index():
+    return 'LIFFアプリのサーバが動作しています'
+
 @app.route('/set_threshold', methods=['POST'])
 def set_threshold():
     data = request.json
