@@ -8,49 +8,53 @@
 <body>
   <h2>しきい値の設定</h2>
   <input type="number" id="x_threshold" step="0.1" placeholder="x_threshold" />
-  <button id="sendBtn">送信</button>
+  <button onclick="sendThreshold()">送信</button>
+  <button onclick="loadThreshold()">現在値を取得</button>
 
   <script>
-    const SERVER_URL = "https://pico-webapp-8al1.onrender.com"; // FlaskのURL
-    const LIFF_ID = "2007874613-rJgOWJ89"; // LIFF ID
+    const SERVER_URL = "https://pico-webapp-8al1.onrender.com"; // ← RenderのURL
 
     async function sendThreshold() {
-      const val = document.getElementById("x_threshold").value;
-      if (val === "" || isNaN(parseFloat(val))) {
+      const x_threshold = parseFloat(document.getElementById("x_threshold").value);
+      if (isNaN(x_threshold)) {
         alert("数値を入力してください");
         return;
       }
-
-      const x_threshold = parseFloat(val);
-      const data = { x_threshold };
-
       try {
         const res = await fetch(`${SERVER_URL}/set_threshold`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
+          body: JSON.stringify({ x_threshold })
         });
-
-        if (!res.ok) {
-          throw new Error(`HTTPエラー: ${res.status}`);
+        const result = await res.json();
+        if (result.status === "success") {
+          alert("送信完了");
+        } else {
+          alert("エラー: " + result.message);
         }
-
-        alert("送信完了");
       } catch (err) {
-        console.error("送信エラー:", err);
-        alert("送信に失敗しました。サーバーの状態を確認してください。");
+        alert("通信エラー: " + err.message);
+      }
+    }
+
+    async function loadThreshold() {
+      try {
+        const res = await fetch(`${SERVER_URL}/get_threshold`);
+        const data = await res.json();
+        document.getElementById("x_threshold").value = data.x_threshold;
+      } catch (err) {
+        alert("取得エラー: " + err.message);
       }
     }
 
     // LIFF初期化
-    liff.init({ liffId: LIFF_ID })
+    liff.init({ liffId: "2007874613-rJgOWJ89" })
       .then(() => {
-        console.log("LIFF初期化成功");
-        document.getElementById("sendBtn").addEventListener("click", sendThreshold);
+        console.log("LIFF初期化完了");
+        loadThreshold(); // ページ読み込み時に現在値を取得
       })
-      .catch((err) => {
-        console.error("LIFF初期化エラー:", err);
-        alert("LIFFの初期化に失敗しました。LIFF IDを確認してください。");
+      .catch(err => {
+        console.error("LIFF初期化エラー", err);
       });
   </script>
 </body>
